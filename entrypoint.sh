@@ -8,13 +8,13 @@ while getopts "a:b:c:d:" o; do
          export directory=${OPTARG}
        ;;
        b)
-         export forceResolution=${OPTARG}
+         export project=${OPTARG}
        ;;
 	   c)
          export failWhenOutdated=${OPTARG}
        ;;
 	   d)
-         export project=${OPTARG}
+         export forceResolution=${OPTARG}
        ;;
   esac
 done
