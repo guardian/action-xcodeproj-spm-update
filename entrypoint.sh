@@ -2,7 +2,7 @@
 set -e
 
 # Load Options
-while getopts "a:b:c:" o; do
+while getopts "a:b:c:d:" o; do
    case "${o}" in
        a)
          export directory=${OPTARG}
@@ -13,6 +13,9 @@ while getopts "a:b:c:" o; do
 	   c)
          export failWhenOutdated=${OPTARG}
        ;;
+	   d)
+         export project=${OPTARG}
+       ;;
   esac
 done
 
@@ -22,8 +25,8 @@ if [ "$directory" != "." ]; then
 	cd $directory
 fi
 
-# Identify `Package.resolved` location
-RESOLVED_PATH=$(find . -type f -name "Package.resolved" | grep -v "*/*.xcodeproj/*")
+# Looks directly in project file for SPM `Package.resolved`
+RESOLVED_PATH="$project.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
 CHECKSUM=$(shasum "$RESOLVED_PATH")
 
 echo "Identified Package.resolved at '$RESOLVED_PATH'."
