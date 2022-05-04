@@ -26,7 +26,7 @@ if [ "$directory" != "." ]; then
 fi
 
 # Looks directly in project file for SPM `Package.resolved`
-RESOLVED_PATH="$project.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+RESOLVED_PATH="$project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
 CHECKSUM=$(shasum "$RESOLVED_PATH")
 
 echo "Identified Package.resolved at '$RESOLVED_PATH'."

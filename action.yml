@@ -8,8 +8,8 @@ inputs:
     description: 'The path in which the Xcodeproj can be found.'
     required: false
     default: '.'
-  project:
-    description: 'The Xcodeproj that holds the SPM data'
+  workspace:
+    description: 'The xcworkspace that holds the SPM data'
     required: true
   forceResolution:
     description: 'Always regenerate the Package.resolved, irrespective of conflicts.'
@@ -31,5 +31,5 @@ runs:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
     - id: script
-      run: entrypoint.sh -a "${{ inputs.directory }}" -b "${{ inputs.project }}" -c "${{ inputs.failWhenOutdated }}" -d "${{ inputs.forceResolution }}"
+      run: entrypoint.sh -a "${{ inputs.directory }}" -b "${{ inputs.workspace }}" -c "${{ inputs.failWhenOutdated }}" -d "${{ inputs.forceResolution }}"
       shell: bash
