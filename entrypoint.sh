@@ -43,7 +43,7 @@ fi
 if [ ! -z "$workspaceName" ]; then
   RESOLVED_PATH=$(find $workspaceName -type f -name "Package.resolved" | grep -v "*/*.xcworkspace/*")
 else
-  RESOLVED_PATH=$(find . -type f -name "Package.resolved" | grep -v "*/*.xcodeproj/*")
+  RESOLVED_PATH=$(find . -type f -name "Package.resolved" -path "*/*.xcodeproj/*")
 fi
 
 CHECKSUM=$(shasum "$RESOLVED_PATH")
