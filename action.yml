@@ -25,6 +25,9 @@ inputs:
   scheme:
     description: 'If specifying a workspace file, you must also provide a scheme as defined within your Xcode workspace.'
     required: false
+  project:
+    description: 'Provide the name of your Xcode project file'
+    required: false
 outputs:
   dependenciesChanged:
     description: 'A bool (true or false) indicating whether changes were made to the dependencies.'
@@ -37,5 +40,5 @@ runs:
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
     - id: script
-      run: entrypoint.sh -a "${{ inputs.directory }}" -b "${{ inputs.forceResolution }}" -c "${{ inputs.failWhenOutdated }}" -d "${{ inputs.xcodePath }}" -e "${{ inputs.workspace }}" -f "${{ inputs.scheme }}"
+      run: entrypoint.sh -a "${{ inputs.directory }}" -b "${{ inputs.forceResolution }}" -c "${{ inputs.failWhenOutdated }}" -d "${{ inputs.xcodePath }}" -e "${{ inputs.workspace }}" -f "${{ inputs.scheme }}" -g "${{ inputs.project }}"
       shell: bash
