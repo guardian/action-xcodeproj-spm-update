@@ -67,7 +67,7 @@ else
 fi
 
 # Add a generic iOS destination to force Package.resolved generation
-xcodebuildDestination="-destination 'generic/platform=iOS'"
+xcodebuildDestination="-destination generic/platform=iOS"
 
 # Default DerivedData path
 DERIVED_DATA_DIR=~/Library/Developer/Xcode/DerivedData
