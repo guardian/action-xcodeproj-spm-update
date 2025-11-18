@@ -61,9 +61,12 @@ fi
 
 # Define Xcodebuild Inputs
 if [ ! -z "$workspaceName" ]; then
-  xcodebuildInputs="-workspace $workspaceName -scheme $scheme"
+    xcodebuildInputs="-workspace $workspaceName -scheme $scheme"
+elif [ ! -z "$projectName" ]; then
+    xcodebuildInputs="-project $projectName.xcodeproj -scheme $scheme"
 else
-  xcodebuildInputs=""
+    echo "::error::Neither workspace nor project was provided. Cannot run xcodebuild."
+    exit 1
 fi
 
 # Add a generic iOS destination to force Package.resolved generation
