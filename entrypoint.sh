@@ -57,7 +57,7 @@ echo "Checksum: $CHECKSUM."
 if [ ! -z "$workspaceName" ]; then
   xcodebuildInputs="-workspace $workspaceName -scheme $scheme"
 else
-  xcodebuildInputs="-project $projectName -scheme $scheme"
+  xcodebuildInputs="-project ${projectName}.xcodeproj -scheme $scheme"
 fi
 
 # Default DerivedData path
