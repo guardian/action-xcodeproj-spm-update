@@ -95,7 +95,7 @@ rm -rf "$SPM_CACHE"
 # Resolve Dependencies
 echo "::group::xcodebuild resolve dependencies"
 echo "xcodebuildInputs are ${xcodebuildInputs}"
-xcodebuild ${xcodebuildInputs} -resolvePackageDependencies -disablePackageRepositoryCache -verbose
+xcodebuild ${xcodebuildInputs} -resolvePackageDependencies -disableAutomaticPackageResolution -verbose
 echo "::endgroup"
 
 # Determine Changes
