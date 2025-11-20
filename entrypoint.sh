@@ -57,7 +57,7 @@ echo "Checksum: $CHECKSUM."
 if [ ! -z "$workspaceName" ]; then
   xcodebuildInputs="-workspace $workspaceName -scheme $scheme"
 else
-  xcodebuildInputs=""
+  xcodebuildInputs="-project $projectName -scheme $scheme"
 fi
 
 # Default DerivedData path
@@ -94,6 +94,7 @@ rm -rf "$SPM_CACHE"
 
 # Resolve Dependencies
 echo "::group::xcodebuild resolve dependencies"
+echo "xcodebuildInputs are ${xcodebuildInputs}"
 xcodebuild ${xcodebuildInputs} -resolvePackageDependencies -disablePackageRepositoryCache
 echo "::endgroup"
 
