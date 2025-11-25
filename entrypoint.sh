@@ -2,7 +2,7 @@
 set -e
 
 # Load Options
-while getopts "a:b:c:d:e:f:g:" o; do
+while getopts "a:b:c:d:e:f:" o; do
   case "${o}" in
   a)
     export directory=${OPTARG}
@@ -23,9 +23,6 @@ while getopts "a:b:c:d:e:f:g:" o; do
     ;;
   f)
     export scheme=${OPTARG}
-    ;;
-  g)
-    export projectName=${OPTARG}
     ;;
   esac
 done
@@ -60,35 +57,14 @@ else
   xcodebuildInputs=""
 fi
 
-# Default DerivedData path
-DERIVED_DATA_DIR=~/Library/Developer/Xcode/DerivedData
-
-if [ -z "$projectName" ]; then
-    echo "🔍 Scanning for recent derived data folders..."
-    echo "Tip: Pass your project/workspace name to narrow results."
-
-    # List most recently modified folders
-    ls -lt "$DERIVED_DATA_DIR" | head -10
-else
-    echo "🔍 Looking for DerivedData folder matching: $projectName"
-
-    MATCH=$(find "$DERIVED_DATA_DIR" -maxdepth 1 -type d -name "${projectName}-*" | head -n 1)
-
-    if [ -n "$MATCH" ]; then
-        echo "✅ Found DerivedData folder:"
-        echo "$MATCH"
-        echo "Deleting DerivedData folder"
-        rm -rf "$MATCH/SourcePackages"
-
-    else
-        echo "❌ No DerivedData folder found matching: $projectName"
-    fi
-fi
+# Cleanup Caches
+DERIVED_DATA=$(xcodebuild ${xcodebuildInputs} -showBuildSettings -disableAutomaticPackageResolution -skipPackageUpdates | grep -m 1 BUILD_DIR | grep -oE "\/.*" | sed 's|/Build/Products||')
+rm -rf "$DERIVED_DATA"
 
 # If `forceResolution`, then delete the `Package.resolved`
 if [ "$forceResolution" = true ] || [ "$forceResolution" = 'true' ]; then
   echo "Deleting Package.resolved to force it to be regenerated under new format."
-  rm -rf "$RESOLVED_PATH"
+  rm -rf "$RESOLVED_PATH" 2>/dev/null
 fi
 
 # Should be mostly redundant as we use the disable cache flag.
@@ -97,7 +73,7 @@ rm -rf "$SPM_CACHE"
 
 # Resolve Dependencies
 echo "::group::xcodebuild resolve dependencies"
-xcodebuild ${xcodebuildInputs} -resolvePackageDependencies -disablePackageRepositoryCache -verbose
+xcodebuild ${xcodebuildInputs} -resolvePackageDependencies -disablePackageRepositoryCache
 echo "::endgroup"
 
 # Determine Changes
@@ -107,7 +83,6 @@ if [ "$CHECKSUM" != "$NEWCHECKSUM" ]; then
   echo "dependenciesChanged=true" >> $GITHUB_OUTPUT
 
   if [ "$failWhenOutdated" = true ] || [ "$failWhenOutdated" = 'true' ]; then
-    echo "inside the failWhenOutdated"
     exit 1
   fi
 else
