@@ -78,7 +78,7 @@ else
         echo "✅ Found DerivedData folder:"
         echo "$MATCH"
         echo "Deleting DerivedData folder"
-        rm -rf $MATCH
+        rm -rf "$MATCH/SourcePackages"
 
     else
         echo "❌ No DerivedData folder found matching: $projectName"
