@@ -25,7 +25,7 @@ while getopts "a:b:c:d:e:f:g:" o; do
     export scheme=${OPTARG}
     ;;
   g)
-    export project=${OPTARG}
+    export projectName=${OPTARG}
     ;;
   esac
 done
