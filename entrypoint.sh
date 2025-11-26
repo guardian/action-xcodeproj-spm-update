@@ -77,8 +77,6 @@ else
     if [ -n "$MATCH" ]; then
         echo "✅ Found DerivedData folder:"
         echo "$MATCH"
-        echo "Deleting DerivedData folder"
-        rm -rf "$MATCH"
     else
         echo "❌ No DerivedData folder found matching: $projectName"
     fi
