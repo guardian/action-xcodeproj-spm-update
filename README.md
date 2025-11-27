@@ -1,5 +1,13 @@
 # Xcode Project Swift Package Dependencies Update Action
 
+Due to issues with recent versions of Xcode, this is a fork of https://github.com/getsidetrack/action-xcodeproj-spm-update which includes a couple of modifications to the original:
+
+1. **Uses the -derivedDataPath <PATH> flag to specify a different directory for the xcodebuild command**: It appears that on Xcode 26, `xcodebuild` needs to be unable to find DerivedData in order to properly update Swift packages. Given that we have a number of DerivedData folders on the Mac Mini at any one time, some of which will be in use by other runners while this action is running, we don't want to just blindly delete the DerivedData folders on the machine in order to get xcodebuild to update dependencies. Instead, we use the `-derivedDataPath <PATH>` flag to specify a different directory for the `xcodebuild` command. This points to an empty folder on the Mac Mini that we have created specifically for this purpose and called 'DoNotDelete-ios-live-PR9282'.
+2. **Passes in the scheme**: When using the `-derivedDataPath` we also need to pass in the scheme, so we've added that to the `xcodebuildInputs` in `entrypoint.sh`.
+3. **Removes references to workspaces**: The original action includes support for workspaces. Now that we don't use a workspace any more, we have removed any workspace-related checks from the `entrypoint.sh` script in the fork.
+
+## Original README from https://github.com/getsidetrack/action-xcodeproj-spm-update
+
 This action will resolve the Swift Package Manager dependencies within your Xcode project. This can be useful in workflows that want to detect outdated dependencies, or wish to automatically create pull requests updating dependencies.
 
 It will respect the boundaries you defined on your dependency, such as only updating to the next minor or on a given branch.

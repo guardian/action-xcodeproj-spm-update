@@ -25,16 +25,10 @@ while getopts "a:b:c:d:e:f:g:" o; do
     export scheme=${OPTARG}
     ;;
   g)
-    export projectName=${OPTARG}
+    export derivedData=${OPTARG}
     ;;
   esac
 done
-
-# Input Validation
-if [ ! -z "$workspaceName" ] && [ -z "$scheme" ]; then
-  echo "::error::Your action specifies a workspace name but does not define a scheme. You must provide both when using the workspace option."
-  exit 1
-fi
 
 # Change Directory
 if [ "$directory" != "." ]; then
@@ -43,44 +37,14 @@ if [ "$directory" != "." ]; then
 fi
 
 # Identify `Package.resolved` location
-if [ ! -z "$workspaceName" ]; then
-  RESOLVED_PATH=$(find $workspaceName -type f -name "Package.resolved" | grep -v "*/*.xcworkspace/*")
-else
-  RESOLVED_PATH=$(find . -type f -name "Package.resolved" -path "*/*.xcodeproj/*")
-fi
+RESOLVED_PATH=$(find . -type f -name "Package.resolved" -path "*/*.xcodeproj/*")
 
 CHECKSUM=$(shasum "$RESOLVED_PATH")
 echo "Identified Package.resolved at '$RESOLVED_PATH'."
 echo "Checksum: $CHECKSUM."
 
 # Define Xcodebuild Inputs
-if [ ! -z "$workspaceName" ]; then
-  xcodebuildInputs="-workspace $workspaceName -scheme $scheme"
-else
-  xcodebuildInputs=""
-fi
-
-# Default DerivedData path
-DERIVED_DATA_DIR=~/Library/Developer/Xcode/DerivedData
-
-if [ -z "$projectName" ]; then
-    echo "🔍 Scanning for recent derived data folders..."
-    echo "Tip: Pass your project/workspace name to narrow results."
-    
-    # List most recently modified folders
-    ls -lt "$DERIVED_DATA_DIR" | head -10
-else
-    echo "🔍 Looking for DerivedData folder matching: $projectName"
-    
-    MATCH=$(find "$DERIVED_DATA_DIR" -maxdepth 1 -type d -name "${projectName}-*" | head -n 1)
-    
-    if [ -n "$MATCH" ]; then
-        echo "✅ Found DerivedData folder:"
-        echo "$MATCH"
-    else
-        echo "❌ No DerivedData folder found matching: $projectName"
-    fi
-fi
+xcodebuildInputs="-scheme $scheme -derivedDataPath $derivedData"
 
 # If `forceResolution`, then delete the `Package.resolved`
 if [ "$forceResolution" = true ] || [ "$forceResolution" = 'true' ]; then
